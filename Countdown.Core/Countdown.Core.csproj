@@ -8,6 +8,10 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="Configs\" />
   </ItemGroup>

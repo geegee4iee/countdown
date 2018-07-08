@@ -1,9 +1,12 @@
 {
-  "name": "Coundown.Spa.ReactJs",
+  "name": "countdown-spa-reactjs",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aspnet/signalr": "^1.0.0",
     "bootstrap": "^3.3.7",
+    "keymirror": "^0.1.1",
+    "lodash": "^4.17.10",
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
@@ -14,7 +17,8 @@
     "react-scripts": "1.0.17",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "victory": "^0.27.2"
   },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",

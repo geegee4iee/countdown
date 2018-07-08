@@ -1,3 +1,8 @@
+using Coundown.Spa.ReactJs.Core;
+using Coundown.Spa.ReactJs.Infrastructure;
+using Coundown.Spa.ReactJs.Infrastructure.ServiceRegisters;
+using Countdown.Core.Infrastructure;
+using Countdown.Core.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -5,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 
 namespace Coundown.Spa.ReactJs
 {
@@ -19,7 +25,18 @@ namespace Coundown.Spa.ReactJs
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        { 
+            services.AddSingleton(serviceProvider =>
+                    {
+                        var client = new MongoClient(Configuration["MongoDbConnectionString"]);
+                        var database = client.GetDatabase(Configuration["MongoDbDatabase"]);
+
+                        return database;
+                    });
+
+            services.AddSingleton<IAppSettings>(new AppSettings(Configuration));
+            services.AddScoped<IRepository<AppUsageRecord>, AppUsageRecordRepository>();
+            services.AddAutoMapper();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // In production, the React files will be served from this directory
@@ -27,6 +44,8 @@ namespace Coundown.Spa.ReactJs
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

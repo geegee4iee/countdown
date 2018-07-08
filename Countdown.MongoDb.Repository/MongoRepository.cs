@@ -18,6 +18,11 @@ namespace Countdown.MongoDb.Repository
             recordCollection.InsertOne(record);
         }
 
+        public Task AddAsync(AppUsageRecord entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public AppUsageRecord Get(object id)
         {
              var recordCollection = MongoDatabaseHolder.Database.GetCollection<AppUsageRecord>(CollectionName);
@@ -25,6 +30,11 @@ namespace Countdown.MongoDb.Repository
             var record = recordCollection.Find(Builders<AppUsageRecord>.Filter.Eq(f => f.Id, (string)id)).FirstOrDefault();
 
             return record;
+        }
+
+        public Task<AppUsageRecord> GetAsync(object id)
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(AppUsageRecord record)
@@ -37,6 +47,11 @@ namespace Countdown.MongoDb.Repository
              var collection = MongoDatabaseHolder.Database.GetCollection<AppUsageRecord>(CollectionName);
 
             var result = collection.ReplaceOne(Builders<AppUsageRecord>.Filter.Eq(f => f.Id, (string)id), entity);
+        }
+
+        public Task UpdateAsync(AppUsageRecord entity, object id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

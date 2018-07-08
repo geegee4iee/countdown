@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.EmbeddedRavenDb.R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coundown.Spa.ReactJs", "Coundown.Spa.ReactJs\Coundown.Spa.ReactJs.csproj", "{6594C138-757D-4F48-99C1-69C18B98E255}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{29F5B882-32C2-4041-9C7B-0D134E7FA769}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,22 @@ Global
 		{6594C138-757D-4F48-99C1-69C18B98E255}.Release|x64.Build.0 = Release|Any CPU
 		{6594C138-757D-4F48-99C1-69C18B98E255}.Release|x86.ActiveCfg = Release|Any CPU
 		{6594C138-757D-4F48-99C1-69C18B98E255}.Release|x86.Build.0 = Release|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Debug|ARM.Build.0 = Debug|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Debug|x64.Build.0 = Debug|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Debug|x86.Build.0 = Debug|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Release|ARM.ActiveCfg = Release|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Release|ARM.Build.0 = Release|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Release|x64.ActiveCfg = Release|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Release|x64.Build.0 = Release|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Release|x86.ActiveCfg = Release|Any CPU
+		{29F5B882-32C2-4041-9C7B-0D134E7FA769}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
