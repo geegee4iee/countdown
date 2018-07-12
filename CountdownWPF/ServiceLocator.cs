@@ -14,25 +14,37 @@ namespace CountdownWPF
             SingleTon
         }
 
-        static IDictionary<Type, object> _singleTonInstances = new Dictionary<Type, object>();
-        static IDictionary<Type, RegisterType> _typeConfigs = new Dictionary<Type, RegisterType>();
+        static IDictionary<string, object> _singleTonInstances = new Dictionary<string, object>();
+        static IDictionary<string, RegisterType> _typeConfigs = new Dictionary<string, RegisterType>();
 
         private static ServiceLocator _serviceLocator = new ServiceLocator();
 
         public static T GetInstance<T>() where T : class
         {
+            return GetInstance<T>(null);
+        }
+
+        public static T GetInstance<T>(string name) where T: class
+        {
             var typeOfT = typeof(T);
+            var typeFullName = typeOfT.FullName;
 
-            if (!_typeConfigs.ContainsKey(typeOfT)) return default(T);
+            if (!string.IsNullOrEmpty(name))
+            {
+                typeFullName += "_" + name;
+            }
 
-            var registerType = _typeConfigs[typeOfT];
+
+            if (!_typeConfigs.ContainsKey(typeFullName)) return default(T);
+
+            var registerType = _typeConfigs[typeFullName];
 
             switch (registerType)
             {
                 case RegisterType.SingleTon:
-                    if (_singleTonInstances.ContainsKey(typeOfT))
+                    if (_singleTonInstances.ContainsKey(typeFullName))
                     {
-                        return (T)_singleTonInstances[typeOfT];
+                        return (T)_singleTonInstances[typeFullName];
                     }
                     break;
             }
@@ -53,7 +65,6 @@ namespace CountdownWPF
             private Type _type;
 
             // Default register type would be SingleTon
-            private RegisterType _registerType = RegisterType.SingleTon;
             private object _instance;
             static private object obj = new object();
 
@@ -85,13 +96,45 @@ namespace CountdownWPF
                 }
             }
 
-            public void AsSingleTon()
+            public ServiceLocatorSetup RegisterAssemblyForType<T, D>() where T: class where D: T
+            {
+                lock (obj)
+                {
+                    try
+                    {
+                        var typeOfT = typeof(T);
+                        var typeOfD = typeof(D);
+
+                        if (typeOfT.IsAssignableFrom(typeOfD))
+                        {
+                            var instance = Activator.CreateInstance(typeOfD);
+                            _instance = instance;
+                            _type = typeOfT;
+                        }
+
+                        return this;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                        return this;
+                    }
+                }
+            }
+
+            public void AsSingleTon(string name)
             {
                 if (_instance != null && _type != null)
                 {
-                    _typeConfigs.Add(this._type, RegisterType.SingleTon);
-                    _singleTonInstances.Add(_type, _instance);
+                    var fullname = name == null ? this._type.FullName : this._type.FullName + "_" + name;
+                    _typeConfigs.Add(fullname, RegisterType.SingleTon);
+                    _singleTonInstances.Add(fullname, _instance);
                 }
+            }
+
+            public void AsSingleTon()
+            {
+                AsSingleTon(null);
             }
         }
 

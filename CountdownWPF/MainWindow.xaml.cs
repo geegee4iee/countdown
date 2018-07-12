@@ -5,9 +5,14 @@ using CountdownWPF.Core;
 using CountdownWPF.Infrastructure;
 using CountdownWPF.Utils;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,8 +34,10 @@ namespace CountdownWPF
         string _idleWindowTitle = null;
 
         bool _isIdle = false;
+        bool _mainRepositoryUnavailable = false;
 
         IRepository<AppUsageRecord> _repository = ServiceLocator.GetInstance<IRepository<AppUsageRecord>>();
+        IRepository<AppUsageRecord> _backupRepository = ServiceLocator.GetInstance<IRepository<AppUsageRecord>>("LocalRepository");
 
         public AppUsageRecord _bufferedTodayAppRecord = null;
 
@@ -46,7 +53,7 @@ namespace CountdownWPF
 
             RegisterUIUpdateDispatchers();
 
-            InitializeBackgroundJobs();
+            InitializeTimerJobs();
         }
 
         protected override void OnInitialized(EventArgs e)
@@ -88,14 +95,31 @@ namespace CountdownWPF
 
         private void BufferPersistentRecords()
         {
-            _bufferedTodayAppRecord = _repository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
-            if (_bufferedTodayAppRecord == null)
+            var backupRecord = _backupRepository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
+
+            try
             {
-                _bufferedTodayAppRecord = new AppUsageRecord(DateTime.Now);
+                _bufferedTodayAppRecord = _repository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
+                if (_bufferedTodayAppRecord == null)
+                {
+                    if (backupRecord != null)
+                    {
+                        _bufferedTodayAppRecord = backupRecord;
+                    } else
+                    {
+                        _bufferedTodayAppRecord = new AppUsageRecord(DateTime.Now);
+                    }
+                }
+            } catch (Exception)
+            {
+
+                _mainRepositoryUnavailable = true;
+                _bufferedTodayAppRecord = backupRecord;
             }
+            
         }
 
-        private void InitializeBackgroundJobs()
+        private void InitializeTimerJobs()
         {
             _monitorActiveProcessTimer = new Timer(MonitorUserActiveProcess, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(Settings.MonitorInterval));
             _persistentRecordTimer = new Timer(PersistentRecords, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(Settings.PersistentRecordInterval));
@@ -103,7 +127,16 @@ namespace CountdownWPF
 
         private void PersistentRecords(object state)
         {
+            Debug.WriteLine($"{nameof(PersistentRecords)} is running on thread id={Thread.CurrentThread.ManagedThreadId}");
+
             if (_isIdle) return;
+
+            if (_mainRepositoryUnavailable)
+            {
+                BackupLocally();
+
+                return;
+            }
 
             var todayPersistentRecord = _repository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
             if (todayPersistentRecord != null)
@@ -116,10 +149,19 @@ namespace CountdownWPF
             {
                 _repository.Add(_bufferedTodayAppRecord);
             }
+
+            Debug.WriteLine("Persisting data sucessfully");
+        }
+         
+        private void BackupLocally()
+        {
+            _backupRepository.Update(_bufferedTodayAppRecord, _bufferedTodayAppRecord.Id);
         }
 
         public void MonitorUserActiveProcess(object state)
         {
+            Debug.WriteLine($"{nameof(MonitorUserActiveProcess)} is running on thread id={Thread.CurrentThread.ManagedThreadId}");
+
             if (this._isIdle = IsUserIdle()) return;
 
             var activeProcess = ProcessUtils.GetActiveProcess();
@@ -179,6 +221,8 @@ namespace CountdownWPF
 
         public void UpdateCountDownTimer(object o, object e)
         {
+            Debug.WriteLine($"{nameof(UpdateCountDownTimer)} is running on thread id={Thread.CurrentThread.ManagedThreadId}");
+
             if (_isIdle)
             {
                 this.Title = _idleWindowTitle;

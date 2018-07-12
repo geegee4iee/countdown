@@ -4,10 +4,11 @@ using System.Text;
 
 namespace Countdown.Core.Models
 {
+    [Serializable]
     public class AppUsageRecord : EntityModel
     {
-        public const string PrefixId = "date_";
-        public const string DateFormat = "yyyyMMdd";
+        private const string PrefixId = "date_";
+        private const string DateFormat = "yyyyMMdd";
         public IDictionary<string, ProcessInfo> ActiveApps { get; set; }
         DateTime Date { get; }
 

@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace Countdown.MongoDb.Repository
 
         private static IMongoDatabase InitializeMongoDatabase()
         {
-            var client = new MongoClient("mongodb://localhost:27017");
+            var client = new MongoClient(ConfigurationManager.AppSettings["MongoDbConnectionString"]);
             var database = client.GetDatabase("active_app_record");
 
             return database;

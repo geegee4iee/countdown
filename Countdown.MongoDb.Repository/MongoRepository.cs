@@ -25,11 +25,12 @@ namespace Countdown.MongoDb.Repository
 
         public AppUsageRecord Get(object id)
         {
-             var recordCollection = MongoDatabaseHolder.Database.GetCollection<AppUsageRecord>(CollectionName);
+            var recordCollection = MongoDatabaseHolder.Database.GetCollection<AppUsageRecord>(CollectionName);
 
             var record = recordCollection.Find(Builders<AppUsageRecord>.Filter.Eq(f => f.Id, (string)id)).FirstOrDefault();
 
             return record;
+
         }
 
         public Task<AppUsageRecord> GetAsync(object id)
@@ -39,12 +40,12 @@ namespace Countdown.MongoDb.Repository
 
         public void Update(AppUsageRecord record)
         {
-           
+
         }
 
         public void Update(AppUsageRecord entity, object id)
         {
-             var collection = MongoDatabaseHolder.Database.GetCollection<AppUsageRecord>(CollectionName);
+            var collection = MongoDatabaseHolder.Database.GetCollection<AppUsageRecord>(CollectionName);
 
             var result = collection.ReplaceOne(Builders<AppUsageRecord>.Filter.Eq(f => f.Id, (string)id), entity);
         }

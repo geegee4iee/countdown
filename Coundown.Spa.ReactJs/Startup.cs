@@ -1,4 +1,5 @@
 using Coundown.Spa.ReactJs.Core;
+using Coundown.Spa.ReactJs.Hubs;
 using Coundown.Spa.ReactJs.Infrastructure;
 using Coundown.Spa.ReactJs.Infrastructure.ServiceRegisters;
 using Countdown.Core.Infrastructure;
@@ -45,6 +46,8 @@ namespace Coundown.Spa.ReactJs
                 configuration.RootPath = "ClientApp/build";
             });
 
+            services.AddSignalR();
+
 
         }
 
@@ -65,6 +68,10 @@ namespace Coundown.Spa.ReactJs
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ActiveAppUsageHub>("/realtime");
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -28,6 +28,7 @@ namespace CountdownWPF
             }
 
             ServiceLocator.Setup.RegisterAssemblyForType<IRepository<AppUsageRecord>>(ConfigurationManager.AppSettings["ImplementedRepositoryAssembly"]).AsSingleTon();
+            ServiceLocator.Setup.RegisterAssemblyForType<IRepository<AppUsageRecord>, LocalAppUsageRecordRepository>().AsSingleTon("LocalRepository");
 
             base.OnStartup(e);
         }
