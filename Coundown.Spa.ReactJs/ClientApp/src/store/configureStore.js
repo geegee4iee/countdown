@@ -6,12 +6,16 @@ import * as WeatherForecasts from './WeatherForecasts';
 
 // Component Reducers
 import appUsageReducers from '../components/AppUsageChart/AppUsageChartReducers';
+import appUsageReportReducers from '../components/AppUsageReport/AppUsageReportReducers';
+import appUsageKarmaReducers from '../components/AppUsageKarma/AppUsageKarmaReducers';
 
 export default function configureStore(history, initialState) {
   const reducers = {
     counter: Counter.reducer,
     weatherForecasts: WeatherForecasts.reducer,
-    appUsage: appUsageReducers
+    appUsage: appUsageReducers,
+    appUsageReport: appUsageReportReducers,
+    appUsageKarma: appUsageKarmaReducers
   };
 
   const middleware = [

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CountdownWPF.Infrastructure
 {
-    class LocalAppUsageRecordRepository : IRepository<AppUsageRecord>
+    class LocalAppUsageRecordRepository : IAppUsageRecordRepository
     {
         readonly string savesFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "saves");
         public void Add(AppUsageRecord entity)
@@ -34,11 +34,6 @@ namespace CountdownWPF.Infrastructure
             }
         }
 
-        public Task AddAsync(AppUsageRecord entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public AppUsageRecord Get(object id)
         {
             var path = Path.Combine(savesFolderPath, (string)id + ".bin");
@@ -54,11 +49,6 @@ namespace CountdownWPF.Infrastructure
             }
 
             return null;
-        }
-
-        public Task<AppUsageRecord> GetAsync(object id)
-        {
-            throw new NotImplementedException();
         }
 
         public void Update(AppUsageRecord entity, object id)
@@ -78,11 +68,6 @@ namespace CountdownWPF.Infrastructure
                 serializer.Serialize(saveFileStream, entity);
                 Debug.WriteLine("Backing up locally successfully");
             }
-        }
-
-        public Task UpdateAsync(AppUsageRecord entity, object id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

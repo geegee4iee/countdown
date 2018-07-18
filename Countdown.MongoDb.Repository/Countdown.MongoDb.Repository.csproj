@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MongoDatabaseHolder.cs" />
-    <Compile Include="MongoRepository.cs" />
+    <Compile Include="AppUsageRecordRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

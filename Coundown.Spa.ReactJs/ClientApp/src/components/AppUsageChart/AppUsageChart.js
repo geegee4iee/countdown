@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme, VictorySharedEvents, VictoryLabel, VictoryPie } from 'victory';
+import moment from 'moment';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { Badge, Well } from 'react-bootstrap';
-import { Button } from 'react-bootstrap';
-
+import { Button, ButtonGroup } from 'react-bootstrap';
 import _ from 'lodash';
 
 // Local
 import SignalRConnection from '../../infrastructure/SignalRWrapper';
 import { Actions } from './AppUsageChartActions';
 import SubPieDetailTable from '../AppUsageChart/SubPieDetailTable';
+import DayPickerInput from '../DayPickerInput/DayPickerInput';
 
 class AppUsageChart extends Component {
     constructor(props) {
@@ -39,23 +40,13 @@ class AppUsageChart extends Component {
         console.log(msg);
     }
     componentWillMount() {
-        this.props.requestTodayProcessInfoCollection();
+        this.props.requestProcessInfoCollectionForDate(moment());
     }
 
     componentWillUnmount() {
         SignalRConnection.getInstanceAsync().then(instance => {
             instance.offHub("ReceiveMessage", this.receiveMessage);
         });
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        if (this.props.processInfoCollection !== nextProps.processInfoCollection) {
-            return true;
-        }
-
-        if (this.state !== nextState) return true;
-
-        return false;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -110,75 +101,37 @@ class AppUsageChart extends Component {
         });
     }
 
-    renderSharedCharts() {
-        return (
-            <Row>
-                <svg viewBox="0 0 450 350">
-                    <VictorySharedEvents
-                        events={[{
-                            childName: ["pie", "bar"],
-                            target: "data",
-                            eventHandlers: {
-                                onMouseOver: () => {
-                                    return [{
-                                        childName: ["pie", "bar"],
-                                        mutation: (props) => {
-                                            return {
-                                                style: Object.assign({}, props.style, { fill: "tomato" })
-                                            };
-                                        }
-                                    }];
-                                },
-                                onMouseOut: () => {
-                                    return [{
-                                        childName: ["pie", "bar"],
-                                        mutation: () => {
-                                            return null;
-                                        }
-                                    }];
-                                }
-                            }
-                        }]}>
-                        <g transform={"translate(150, 50)"}>
-                            <VictoryBar name="bar"
-                                width={300}
-                                standalone={false}
-                                style={{
-                                    data: { width: 20 },
-                                    labels: { fontSize: 25 }
-                                }}
-                                data={[
-                                    { x: "a", y: 2 }, { x: "b", y: 3 }, { x: "c", y: 5 }, { x: "d", y: 4 }
-                                ]}
-                                labels={["a", "b", "c", "d"]}
-                                labelComponent={<VictoryLabel y={280} />}
-                            />
-                        </g>
-                        <g transform={"translate(0, -75)"}>
-                            <VictoryPie name="pie"
-                                width={250}
-                                standalone={false}
-                                style={{ labels: { fontSize: 25, padding: 10 } }}
-                                data={[
-                                    { x: "a", y: 1 }, { x: "b", y: 4 }, { x: "c", y: 5 }, { x: "d", y: 7 }
-                                ]}
-                            />
-                        </g>
-                    </VictorySharedEvents>
-                </svg>
-            </Row>
-        );
-    }
-
     setSubPieInfo(subPieInfo) {
         this.setState({
             currentSubPieInfo: subPieInfo
         });
     }
 
+    handleSelect(date) {
+        console.log(date);
+    }
+
+    handleDayChange(day) {
+        this.setState({selectedDay: day});
+    }
+
     render() {
         return (
             <Grid>
+                <Row>
+                    <ButtonGroup>
+                        <Button 
+                            bsStyle='primary'
+                            onClick={() => {
+                            this.props.requestProcessInfoCollectionForDate(moment());
+                            }}>Today</Button>
+                        <Button onClick={() => {
+                            this.props.requestProcessInfoCollectionForDate(moment().set('day', -1));
+                        }}>Yesterday</Button>
+                        <DayPickerInput onDayChange={(day) => this.props.requestProcessInfoCollectionForDate(day)}/>
+                    </ButtonGroup>
+                    
+                </Row>
                 <Row>
                     <Col sm={6}>
                         <VictoryChart

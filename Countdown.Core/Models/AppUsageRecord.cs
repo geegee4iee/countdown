@@ -10,12 +10,12 @@ namespace Countdown.Core.Models
         private const string PrefixId = "date_";
         private const string DateFormat = "yyyyMMdd";
         public IDictionary<string, ProcessInfo> ActiveApps { get; set; }
-        DateTime Date { get; }
+        public DateTime Date { get; set; }
 
         public AppUsageRecord(in DateTime date)
         {
             Id = PrefixId + date.ToString(DateFormat);
-            Date = date;
+            Date = date.Date;
 
             ActiveApps = new Dictionary<string, ProcessInfo>();
         }

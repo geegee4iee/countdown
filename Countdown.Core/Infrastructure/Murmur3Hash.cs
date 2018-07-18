@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Countdown.Core.Infrastructure
 {
 
-    public class Murmur3Hash
+    public class Murmur3Hash: IHashAlgorithm
     {
         // 128 bit output, 64 bit platform version
 

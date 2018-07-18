@@ -16,6 +16,8 @@ namespace Coundown.Spa.ReactJs.Infrastructure
             this.config = config;
         }
 
-        public string MongoDbCollectionName => config[nameof(MongoDbCollectionName)];
+        public string DailyRecordCollectionName => config[nameof(DailyRecordCollectionName)];
+
+        public string LabeledRecordCollectionName => config[nameof(LabeledRecordCollectionName)];
     }
 }

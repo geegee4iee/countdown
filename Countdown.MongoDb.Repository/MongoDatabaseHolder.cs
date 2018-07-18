@@ -1,4 +1,7 @@
-﻿using MongoDB.Driver;
+﻿using Countdown.Core.Models;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -22,10 +25,21 @@ namespace Countdown.MongoDb.Repository
 
         private static IMongoDatabase InitializeMongoDatabase()
         {
+            ConfigBsonMapping();
+
             var client = new MongoClient(ConfigurationManager.AppSettings["MongoDbConnectionString"]);
             var database = client.GetDatabase("active_app_record");
 
             return database;
+        }
+
+        private static void ConfigBsonMapping()
+        {
+            BsonClassMap.RegisterClassMap<AppUsageRecord>(cm =>
+            {
+                cm.AutoMap();
+                cm.MapMember(c => c.Date).SetSerializer(new DateTimeSerializer(dateOnly: true, representation: MongoDB.Bson.BsonType.String));
+            });
         }
     }
 }

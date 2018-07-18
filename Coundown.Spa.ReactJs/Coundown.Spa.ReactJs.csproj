@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Countdown.Core\Countdown.Core.csproj" />
+    <ProjectReference Include="..\Countdown.ML.Core\Countdown.ML.Core.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

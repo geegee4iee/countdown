@@ -4,7 +4,7 @@ using Raven.Json.Linq;
 
 namespace CountdownWPF.Infrastructure
 {
-    class EmbeddedRecordRepository : IRepository<AppUsageRecord>
+    class EmbeddedRecordRepository : IAppUsageRecordRepository
     {
         public void Update(AppUsageRecord record)
         {

@@ -7,6 +7,7 @@ namespace Coundown.Spa.ReactJs.Core
 {
     public interface IAppSettings
     {
-        string MongoDbCollectionName { get; }
+        string DailyRecordCollectionName { get; }
+        string LabeledRecordCollectionName { get; }
     }
 }

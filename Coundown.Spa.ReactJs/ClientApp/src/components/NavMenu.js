@@ -34,6 +34,16 @@ export default props => (
             <Glyphicon glyph='th-list' /> App Usage
           </NavItem>
         </LinkContainer>
+        <LinkContainer to={'/appusage-report'}>
+          <NavItem>
+            <Glyphicon glyph='education'/> App Usage Report
+          </NavItem>
+        </LinkContainer>
+        <LinkContainer to={'/karma'}>
+          <NavItem>
+            <Glyphicon glyph='th-list'/> Karma
+          </NavItem>
+        </LinkContainer>
       </Nav>
     </Navbar.Collapse>
   </Navbar>

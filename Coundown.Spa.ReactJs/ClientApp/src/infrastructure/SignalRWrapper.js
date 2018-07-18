@@ -3,15 +3,6 @@ import { HubConnectionBuilder } from '@aspnet/signalr';
 let signalRInstance = null;
 const constructorToken = Symbol('signalr-constructor');
 
-const connectToHub = () => {
-    const connection = new HubConnectionBuilder().withUrl("https://localhost:5001/realtime").build();
-    connection.start().then(e => {
-        console.log("Connected to the hub");
-    }).catch(err => console.error(err.toString()));
-
-    return connection;
-}
-
 export default class SignalRConnection {
     constructor(symbol) {
         if (symbol !== constructorToken) {

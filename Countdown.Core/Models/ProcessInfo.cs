@@ -11,7 +11,12 @@ namespace Countdown.Core.Models
     [Serializable]
     public class ProcessInfo : EntityModel
     {
-        Murmur3Hash hashFunction = new Murmur3Hash();
+        private ProcessInfo()
+        {
+
+        }
+
+        static Murmur3Hash hashFunction = new Murmur3Hash();
         public ProcessInfo(in Process activeProcess, in int monitorIntervalSeconds)
         {
             if (activeProcess != null)
@@ -20,15 +25,13 @@ namespace Countdown.Core.Models
                 this.MainWindowTitle = activeProcess.MainWindowTitle;
                 this.ProcessName = activeProcess.ProcessName;
 
-                string hashStr = null;
-
-                if (!_cachedPartialKeys.TryGetValue(this.MainWindowTitle, out hashStr))
+                if (!_cachedPartialKeys.TryGetValue(this.MainWindowTitle, out string hashStr))
                 {
                     byte[] hashed = hashFunction.ComputeHash(Encoding.Unicode.GetBytes(this.MainWindowTitle));
                     hashStr = hashed.ToHex();
                     _cachedPartialKeys.Add(this.MainWindowTitle, hashStr);
                 }
-                
+
                 this.Id = $"{this.ProcessName}_{hashStr}";
             }
         }

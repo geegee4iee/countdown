@@ -36,8 +36,8 @@ namespace CountdownWPF
         bool _isIdle = false;
         bool _mainRepositoryUnavailable = false;
 
-        IRepository<AppUsageRecord> _repository = ServiceLocator.GetInstance<IRepository<AppUsageRecord>>();
-        IRepository<AppUsageRecord> _backupRepository = ServiceLocator.GetInstance<IRepository<AppUsageRecord>>("LocalRepository");
+        IAppUsageRecordRepository _repository = ServiceLocator.GetInstance<IAppUsageRecordRepository>();
+        IAppUsageRecordRepository _backupRepository = ServiceLocator.GetInstance<IAppUsageRecordRepository>("LocalRepository");
 
         public AppUsageRecord _bufferedTodayAppRecord = null;
 
@@ -100,6 +100,7 @@ namespace CountdownWPF
             try
             {
                 _bufferedTodayAppRecord = _repository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
+
                 if (_bufferedTodayAppRecord == null)
                 {
                     if (backupRecord != null)
@@ -110,13 +111,18 @@ namespace CountdownWPF
                         _bufferedTodayAppRecord = new AppUsageRecord(DateTime.Now);
                     }
                 }
-            } catch (Exception)
-            {
 
+                if (_bufferedTodayAppRecord.Date != DateTime.Now.Date)
+                {
+                    _bufferedTodayAppRecord.Date = DateTime.Now.Date;
+                    _repository.Update(_bufferedTodayAppRecord, _bufferedTodayAppRecord.Id);
+                }
+            } catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
                 _mainRepositoryUnavailable = true;
                 _bufferedTodayAppRecord = backupRecord;
             }
-            
         }
 
         private void InitializeTimerJobs()

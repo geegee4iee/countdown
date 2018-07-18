@@ -1,4 +1,5 @@
 import keyMirror from 'keymirror';
+import moment from 'moment';
 
 export const ActionTypes = keyMirror({
     RECEIVE_PROCESS_INFO_COLLECTION: null
@@ -14,7 +15,16 @@ function receiveProcessInfoCollection(json) {
 }
 
 const requestTodayProcessInfoCollection = () => async (dispatch) => {
-    const reponse = await fetch(`https://localhost:5001/api/AppUsageRecord/today`);
+    const reponse = await fetch(`/api/AppUsageRecord/today`);
+    const processInfoCollection = await reponse.json();
+
+    dispatch(receiveProcessInfoCollection(processInfoCollection));
+}
+
+const requestProcessInfoCollectionForDate = (date) => async (dispatch) => {
+    const dateStr = moment(date).format('YYYY-MM-DD');
+
+    const reponse = await fetch(`/api/AppUsageRecord/${dateStr}`);
     const processInfoCollection = await reponse.json();
 
     dispatch(receiveProcessInfoCollection(processInfoCollection));
@@ -22,6 +32,7 @@ const requestTodayProcessInfoCollection = () => async (dispatch) => {
 
 export const Actions = {
     receiveProcessInfoCollection,
-    requestTodayProcessInfoCollection
+    requestTodayProcessInfoCollection,
+    requestProcessInfoCollectionForDate
 }
 
