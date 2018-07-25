@@ -22,7 +22,7 @@ namespace Countdown.ML.Core
 
             if (_vocabulary == null)
             {
-                _vocabulary = items.Select(d => d.Title + " " + d.Process).SelectMany(_filter).GroupBy(str => str).Where(grp => grp.Count() > 2).Select(grp => grp.Key).Take(2000).OrderBy(str => str).ToArray();
+                _vocabulary = items.Select(d => d.Title + " " + d.Process).SelectMany(_filter).GroupBy(str => str).Where(grp => grp.Count() > 2).OrderByDescending(grp => grp.Count()).Select(grp => grp.Key).Take(2500).OrderBy(str => str).ToArray();
             }
 
             _x = TransformTextUtils.TransformTextToX(words, _vocabulary);

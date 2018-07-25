@@ -6,7 +6,8 @@ namespace Countdown.ML.Core
 {
     internal class TransformTextUtils
     {
-        public static Func<string, string[]> Filter = w => Regex.Replace(w, @"[^a-zA-Z]", " ").Trim().ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Where(d => d.Count() < 20).ToArray();
+        string match = "[ \\]\\[.,\"':;/><+=_\\-|\\()*&^%$#@!~`{}?]";
+        public static Func<string, string[]> Filter = w => Regex.Replace(w, "[ \\]\\[.,\"':;/><+=_\\-|\\()*&^%$#@!~`{}?]", " ").Trim().ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Where(d => d.Count() < 20).ToArray();
 
         public static double[][] TransformTextToX(string[][] words, string[] vocabulary)
         {

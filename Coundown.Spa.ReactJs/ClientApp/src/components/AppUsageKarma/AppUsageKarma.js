@@ -15,21 +15,27 @@ class AppUsageKarma extends Component {
         return _.reduce(karmaResults, (result, value) => {
             if (value.category === 0) {
                 result.good += value.seconds * 1.5;
+                result.totalGoodTime += value.seconds;
             }
 
             if (value.category === 1) {
                 result.bad += value.seconds * 2;
+                result.totalBadTime += value.seconds;
             }
 
             if (value.category === 2) {
                 result.neutral += value.seconds * 1.25;
+                result.totalNeutralTime += value.seconds;
             }
 
             return result;
         }, {
             good: 0,
             bad: 0,
-            neutral: 0
+            neutral: 0,
+            totalGoodTime: 0,
+            totalBadTime: 0,
+            totalNeutralTime: 0
         });
     }
 
@@ -78,6 +84,13 @@ class AppUsageKarma extends Component {
                             <Alert bsStyle={karmaStyle}>
                                 <h4>Rating: {karmaStatus}</h4>
                             </Alert>
+                        </Col>
+                        <Col sm={6}>
+                            <p>
+                                Total good time: {_.floor(karmaPoints.totalGoodTime / 3600, 2)}h<br/>
+                                Total bad time: {_.floor(karmaPoints.totalBadTime / 3600, 2)}h<br/>
+                                Total neutral time: {_.floor(karmaPoints.totalNeutralTime / 3600, 2)}h
+                            </p>
                         </Col>
                     </Row>
                     <Row>

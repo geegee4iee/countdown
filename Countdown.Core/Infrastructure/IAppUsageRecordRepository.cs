@@ -10,5 +10,6 @@ namespace Countdown.Core.Infrastructure
         AppUsageRecord Get(object id);
         void Add(AppUsageRecord appUsageRecord);
         void Update(AppUsageRecord appUsage, object id);
+        void Delete(object id);
     }
 }

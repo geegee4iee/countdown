@@ -1,4 +1,5 @@
-﻿using Countdown.Core.Infrastructure;
+﻿using Countdown.Core.Factories;
+using Countdown.Core.Infrastructure;
 using Countdown.Core.Models;
 using Countdown.Core.Utils;
 using CountdownWPF.Core;
@@ -95,38 +96,44 @@ namespace CountdownWPF
 
         private void BufferPersistentRecords()
         {
-            var backupRecord = _backupRepository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
+            var todayRecordId = AppUsageRecord.GetGeneratedId(DateTime.Now);
 
             try
             {
-                _bufferedTodayAppRecord = _repository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
+                _bufferedTodayAppRecord = _repository.Get(todayRecordId);
+                var backupRecord = _backupRepository.Get(todayRecordId);
 
                 if (_bufferedTodayAppRecord == null)
                 {
-                    if (backupRecord != null)
-                    {
-                        _bufferedTodayAppRecord = backupRecord;
-                    } else
-                    {
-                        _bufferedTodayAppRecord = new AppUsageRecord(DateTime.Now);
-                    }
+                    _bufferedTodayAppRecord = new AppUsageRecord(DateTime.Now);
                 }
 
-                if (_bufferedTodayAppRecord.Date != DateTime.Now.Date)
+                if (backupRecord != null)
                 {
-                    _bufferedTodayAppRecord.Date = DateTime.Now.Date;
-                    _repository.Update(_bufferedTodayAppRecord, _bufferedTodayAppRecord.Id);
+                    _bufferedTodayAppRecord.MergeWith(backupRecord);
+                    _backupRepository.Delete(todayRecordId);
                 }
-            } catch (Exception ex)
+            }
+            catch (TimeoutException ex)
             {
                 Debug.WriteLine(ex.Message);
                 _mainRepositoryUnavailable = true;
-                _bufferedTodayAppRecord = backupRecord;
+
+                var backupRecord = _backupRepository.Get(todayRecordId);
+                if (backupRecord == null)
+                {
+                    _bufferedTodayAppRecord = new AppUsageRecord(DateTime.Now);
+                }
+                else
+                {
+                    _bufferedTodayAppRecord = backupRecord;
+                }
             }
         }
 
         private void InitializeTimerJobs()
         {
+
             _monitorActiveProcessTimer = new Timer(MonitorUserActiveProcess, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(Settings.MonitorInterval));
             _persistentRecordTimer = new Timer(PersistentRecords, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(Settings.PersistentRecordInterval));
         }
@@ -139,26 +146,68 @@ namespace CountdownWPF
 
             if (_mainRepositoryUnavailable)
             {
-                BackupLocally();
+                var result = TryGetFromMainRepository();
 
-                return;
+                if (result.Item2 == false)
+                {
+                    BackupLocally();
+                    return;
+                } else
+                {
+                    _mainRepositoryUnavailable = false;
+
+                    if (result.Item1 != null)
+                    {
+                        _bufferedTodayAppRecord.MergeWith(result.Item1);
+                        _backupRepository.Delete(_bufferedTodayAppRecord.Id);
+                    }
+                }
             }
 
-            var todayPersistentRecord = _repository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
-            if (todayPersistentRecord != null)
+            try
             {
-                todayPersistentRecord.ActiveApps = _bufferedTodayAppRecord.ActiveApps;
+                var todayPersistentRecord = _repository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
+                if (todayPersistentRecord != null)
+                {
+                    todayPersistentRecord.ActiveApps = _bufferedTodayAppRecord.ActiveApps;
 
-                _repository.Update(todayPersistentRecord, todayPersistentRecord.Id);
-            }
-            else
+                    _repository.Update(todayPersistentRecord, todayPersistentRecord.Id);
+                }
+                else
+                {
+                    _repository.Add(_bufferedTodayAppRecord);
+                }
+            } catch (Exception ex)
             {
-                _repository.Add(_bufferedTodayAppRecord);
+                Debug.WriteLine($"Error when persisting data: {ex.Message}");
+                _mainRepositoryUnavailable = true;
+
+                this.PersistentRecords(state);
             }
+            
 
             Debug.WriteLine("Persisting data sucessfully");
         }
-         
+
+        private Tuple<AppUsageRecord, bool> TryGetFromMainRepository()
+        {
+            AppUsageRecord appRecord = null;
+
+            try
+            {
+                appRecord = _repository.Get(AppUsageRecord.GetGeneratedId(DateTime.Now));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+
+                return new Tuple<AppUsageRecord, bool>(null, false);
+            }
+
+
+            return new Tuple<AppUsageRecord, bool>(appRecord, true);
+        }
+
         private void BackupLocally()
         {
             _backupRepository.Update(_bufferedTodayAppRecord, _bufferedTodayAppRecord.Id);
@@ -173,15 +222,15 @@ namespace CountdownWPF
             var activeProcess = ProcessUtils.GetActiveProcess();
             if (activeProcess != null)
             {
-                var processInfo = new ProcessInfo(activeProcess, Settings.MonitorInterval);
-
+                var processInfoId = ProcessInfoFactory.CreateId(activeProcess);
                 var activeApps = _bufferedTodayAppRecord.ActiveApps;
-                if (activeApps.ContainsKey(processInfo.Id))
+                if (!string.IsNullOrWhiteSpace(processInfoId) && activeApps.ContainsKey(processInfoId))
                 {
-                    activeApps[processInfo.Id].TotalAmountOfTime += TimeSpan.FromSeconds(Settings.MonitorInterval);
+                    activeApps[processInfoId].TotalAmountOfTime += TimeSpan.FromSeconds(Settings.MonitorInterval);
                 }
                 else
                 {
+                    var processInfo = ProcessInfoFactory.Create(activeProcess, Settings.MonitorInterval);
                     activeApps.Add(processInfo.Id, processInfo);
                 }
             }
@@ -192,10 +241,7 @@ namespace CountdownWPF
             var idleTime = UserInputInfoUtils.GetLastInputTime();
             if (idleTime > Settings.UserIdleWindow)
             {
-                if (Debugger.IsAttached)
-                {
-                    Debug.WriteLine("User idle detected");
-                }
+                Debug.WriteLine("User idle detected");
 
                 return true;
             }
@@ -209,7 +255,7 @@ namespace CountdownWPF
             _persistentRecordTimer.Dispose();
             _caculateTimeTimer.Stop();
 
-            if (Debugger.IsAttached) Debug.WriteLine("Closing the app");
+            Debug.WriteLine("Closing the app");
         }
 
         protected override void OnDeactivated(EventArgs e)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Countdown.Core.Models
@@ -17,12 +18,29 @@ namespace Countdown.Core.Models
             Id = PrefixId + date.ToString(DateFormat);
             Date = date.Date;
 
-            ActiveApps = new Dictionary<string, ProcessInfo>();
+            ActiveApps = new Dictionary<string, ProcessInfo>(300);
         }
 
         public static string GetGeneratedId(in DateTime date)
         {
             return PrefixId + date.ToString(DateFormat);
+        }
+
+        public void MergeWith(AppUsageRecord appRecord2)
+        {
+            var secondActiveApps = appRecord2.ActiveApps.Select(a => a.Value);
+            foreach(var activeApp in secondActiveApps)
+            {
+                if (this.ActiveApps.TryGetValue(activeApp.Id, out ProcessInfo processInfo))
+                {
+                    processInfo.TotalAmountOfTime += activeApp.TotalAmountOfTime;
+                }
+                else
+                {
+                    this.ActiveApps.Add(activeApp.Id, activeApp);
+                }
+            }
+
         }
     }
 }

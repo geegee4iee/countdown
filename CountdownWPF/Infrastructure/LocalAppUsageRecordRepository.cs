@@ -20,7 +20,6 @@ namespace CountdownWPF.Infrastructure
             string savesDir = savesFolderPath;
             if (!Directory.Exists(savesDir))
             {
-                // securityRules.AddAccessRule(new FileSystemAccessRule(WindowsIdentity.GetCurrent().Name, FileSystemRights.FullControl, AccessControlType.Allow));
                 Directory.CreateDirectory(savesDir);
             }
 
@@ -56,7 +55,6 @@ namespace CountdownWPF.Infrastructure
             string savesDir = savesFolderPath;
             if (!Directory.Exists(savesDir))
             {
-                // securityRules.AddAccessRule(new FileSystemAccessRule(WindowsIdentity.GetCurrent().Name, FileSystemRights.FullControl, AccessControlType.Allow));
                 Directory.CreateDirectory(savesDir);
             }
 
@@ -67,6 +65,16 @@ namespace CountdownWPF.Infrastructure
                 BinaryFormatter serializer = new BinaryFormatter();
                 serializer.Serialize(saveFileStream, entity);
                 Debug.WriteLine("Backing up locally successfully");
+            }
+        }
+
+        public void Delete(object id)
+        {
+            string fileName = Path.Combine(savesFolderPath, (string)id + ".bin");
+
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
             }
         }
     }

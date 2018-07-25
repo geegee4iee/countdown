@@ -19,24 +19,9 @@ export default props => (
             <Glyphicon glyph='home' /> Home
           </NavItem>
         </LinkContainer>
-        <LinkContainer to={'/counter'}>
-          <NavItem>
-            <Glyphicon glyph='education' /> Counter
-          </NavItem>
-        </LinkContainer>
-        <LinkContainer to={'/fetchdata'}>
-          <NavItem>
-            <Glyphicon glyph='th-list' /> Fetch data
-          </NavItem>
-        </LinkContainer>
         <LinkContainer to={'/appusage'}>
           <NavItem>
             <Glyphicon glyph='th-list' /> App Usage
-          </NavItem>
-        </LinkContainer>
-        <LinkContainer to={'/appusage-report'}>
-          <NavItem>
-            <Glyphicon glyph='education'/> App Usage Report
           </NavItem>
         </LinkContainer>
         <LinkContainer to={'/karma'}>

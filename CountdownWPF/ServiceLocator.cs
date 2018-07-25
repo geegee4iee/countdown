@@ -6,16 +6,22 @@ using System.Reflection;
 
 namespace CountdownWPF
 {
+    public class Dependency
+    {
+        public object Instance { get; set; }
+        public RegisteredTypeConfig TypeConfig { get; set; }
+        public Tuple<Type, Type> RegisteredType { get; set; }
+    }
+
+    public enum RegisteredTypeConfig
+    {
+        SingleTon
+    }
 
     public class ServiceLocator
     {
-        enum RegisterType
-        {
-            SingleTon
-        }
 
-        static IDictionary<string, object> _singleTonInstances = new Dictionary<string, object>();
-        static IDictionary<string, RegisterType> _typeConfigs = new Dictionary<string, RegisterType>();
+        static public IDictionary<string, Dependency> _dependencies = new Dictionary<string, Dependency>();
 
         private static ServiceLocator _serviceLocator = new ServiceLocator();
 
@@ -24,7 +30,7 @@ namespace CountdownWPF
             return GetInstance<T>(null);
         }
 
-        public static T GetInstance<T>(string name) where T: class
+        public static T GetInstance<T>(string name) where T : class
         {
             var typeOfT = typeof(T);
             var typeFullName = typeOfT.FullName;
@@ -34,22 +40,66 @@ namespace CountdownWPF
                 typeFullName += "_" + name;
             }
 
+            if (!_dependencies.TryGetValue(typeFullName, out Dependency dependency)) return default(T);
+            if (dependency.Instance != null) return (T)dependency.Instance;
 
-            if (!_typeConfigs.ContainsKey(typeFullName)) return default(T);
+            return (T)Instantiate(typeFullName);
+        }
 
-            var registerType = _typeConfigs[typeFullName];
+        private static object Instantiate(string fullName)
+        {
+            var dependency = _dependencies[fullName];
 
-            switch (registerType)
+            if (dependency.Instance != null) return dependency.Instance;
+
+            var derivedType = dependency.RegisteredType.Item2;
+
+            var constructors = derivedType.GetConstructors();
+            ConstructorInfo selectedConstructor = null;
+
+            var emptyParamConstructor = constructors.FirstOrDefault(c => c.GetParameters().Length == 0);
+
+            if (emptyParamConstructor != null)
             {
-                case RegisterType.SingleTon:
-                    if (_singleTonInstances.ContainsKey(typeFullName))
+                var instance = Activator.CreateInstance(derivedType);
+                _dependencies[fullName].Instance = instance;
+                return instance;
+            } else
+            {
+                foreach(var c in constructors)
+                {
+                    var @params = c.GetParameters();
+                    int validParams = 0;
+                    foreach(var p in @params)
                     {
-                        return (T)_singleTonInstances[typeFullName];
+                        var paramType = p.ParameterType;
+                        foreach(var d in _dependencies)
+                        {
+                            if (d.Key != fullName && d.Key == paramType.FullName)
+                            {
+                                validParams++;
+                            }
+                        }
                     }
-                    break;
-            }
 
-            return default(T);
+                    if (validParams == @params.Length)
+                    {
+                        selectedConstructor = c;
+                        break;
+                    }
+                }
+
+                var selectedParams = selectedConstructor.GetParameters();
+                object[] arguments = new object[selectedParams.Length];
+                for (int i = 0; i < selectedParams.Length; i++)
+                {
+                    arguments[i] = Instantiate(selectedParams[i].ParameterType.FullName);
+                }
+
+                var instance = Activator.CreateInstance(derivedType, arguments);
+                _dependencies[fullName].Instance = instance;
+                return instance;
+            }
         }
 
         public static ServiceLocatorSetup Setup
@@ -62,11 +112,9 @@ namespace CountdownWPF
 
         public class ServiceLocatorSetup
         {
-            private Type _type;
 
-            // Default register type would be SingleTon
-            private object _instance;
             static private object obj = new object();
+            private Tuple<Type, Type> _registeredType;
 
             public ServiceLocatorSetup RegisterAssemblyForType<T>(string assemblyName) where T : class
             {
@@ -80,9 +128,7 @@ namespace CountdownWPF
                         var t = assembly.GetExportedTypes().Where(c => c.GetInterfaces().Any(i => i == typeOfT)).FirstOrDefault();
                         if (t != null)
                         {
-                            var instance = Activator.CreateInstance(t);
-                            _instance = instance;
-                            _type = typeOfT;
+                            RegisterAssembly(typeOfT, t);
                         }
 
                         return this;
@@ -96,7 +142,15 @@ namespace CountdownWPF
                 }
             }
 
-            public ServiceLocatorSetup RegisterAssemblyForType<T, D>() where T: class where D: T
+            private void RegisterAssembly(Type @base, Type derived)
+            {
+                if (@base.IsAssignableFrom(derived))
+                {
+                    _registeredType = new Tuple<Type, Type>(@base, derived);
+                }
+            }
+
+            public ServiceLocatorSetup RegisterAssemblyForType<T, D>() where T : class where D : T
             {
                 lock (obj)
                 {
@@ -105,12 +159,7 @@ namespace CountdownWPF
                         var typeOfT = typeof(T);
                         var typeOfD = typeof(D);
 
-                        if (typeOfT.IsAssignableFrom(typeOfD))
-                        {
-                            var instance = Activator.CreateInstance(typeOfD);
-                            _instance = instance;
-                            _type = typeOfT;
-                        }
+                        RegisterAssembly(typeOfT, typeOfD);
 
                         return this;
                     }
@@ -124,11 +173,15 @@ namespace CountdownWPF
 
             public void AsSingleTon(string name)
             {
-                if (_instance != null && _type != null)
+                if (_registeredType != null)
                 {
-                    var fullname = name == null ? this._type.FullName : this._type.FullName + "_" + name;
-                    _typeConfigs.Add(fullname, RegisterType.SingleTon);
-                    _singleTonInstances.Add(fullname, _instance);
+                    var fullname = name == null ? _registeredType.Item1.FullName : _registeredType.Item1.FullName + "_" + name;
+
+                    _dependencies.Add(fullname, new Dependency
+                    {
+                        RegisteredType = _registeredType,
+                        TypeConfig = RegisteredTypeConfig.SingleTon
+                    });
                 }
             }
 

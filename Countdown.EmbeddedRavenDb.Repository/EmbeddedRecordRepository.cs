@@ -55,5 +55,10 @@ namespace CountdownWPF.Infrastructure
         {
             throw new System.NotImplementedException();
         }
+
+        public void Delete(object id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

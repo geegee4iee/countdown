@@ -26,8 +26,11 @@ namespace Countdown.MongoDb.Repository
         private static IMongoDatabase InitializeMongoDatabase()
         {
             ConfigBsonMapping();
+            MongoClientSettings settings = new MongoClientSettings();
+            settings.Server = new MongoServerAddress("localhost", 27017);
+            settings.ServerSelectionTimeout = TimeSpan.FromSeconds(10);
 
-            var client = new MongoClient(ConfigurationManager.AppSettings["MongoDbConnectionString"]);
+            var client = new MongoClient(settings);
             var database = client.GetDatabase("active_app_record");
 
             return database;

@@ -31,6 +31,7 @@
             </TabItem> 
         </TabControl>
         <StackPanel  Grid.Row="0" Margin="40, 0, 0, 0" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Foreground="White" FontSize="10" Text="(Offline)" TextAlignment="Center" Visibility="Hidden"/>
             <TextBlock Foreground="White" FontSize="25" Text="Remaining time" TextAlignment="Left"/>
             <TextBlock x:Name="countDownTxt" Foreground="White" FontSize="50" Text="00:00:00"/>
             <StackPanel HorizontalAlignment="Stretch" Orientation="Horizontal">

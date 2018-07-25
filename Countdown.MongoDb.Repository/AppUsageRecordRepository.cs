@@ -18,6 +18,11 @@ namespace Countdown.MongoDb.Repository
             recordCollection.InsertOne(record);
         }
 
+        public void Delete(object id)
+        {
+            throw new NotImplementedException();
+        }
+
         public AppUsageRecord Get(object id)
         {
             var recordCollection = MongoDatabaseHolder.Database.GetCollection<AppUsageRecord>(CollectionName);
