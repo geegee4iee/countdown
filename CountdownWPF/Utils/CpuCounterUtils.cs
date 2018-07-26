@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CountdownWPF.Infrastructure
+namespace CountdownWPF.Utils
 {
-    public class CpuCounter
+    public class CpuCounterUtils
     {
         private static readonly Lazy<PerformanceCounter> _cpuCounter = new Lazy<PerformanceCounter>(CreateCpuCounter);
 

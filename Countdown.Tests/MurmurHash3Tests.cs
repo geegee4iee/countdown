@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Countdown.Test
+namespace Countdown.Tests
 {
     
     public class MurmurHash3Tests

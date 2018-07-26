@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CountdownWPF.Core
+namespace CountdownWPF.Configurations
 {
     public static class Settings
     {

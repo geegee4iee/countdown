@@ -28,6 +28,11 @@ namespace Countdown.Core.Models
 
         public void MergeWith(AppUsageRecord appRecord2)
         {
+            if (appRecord2.Date != this.Date)
+            {
+                throw new ArgumentException("Cannot merge with different-date record!");
+            }
+
             var secondActiveApps = appRecord2.ActiveApps.Select(a => a.Value);
             foreach(var activeApp in secondActiveApps)
             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Countdown.Test.SpecificationTests
+namespace Countdown.Tests
 {
     public class LastWeekRecordSpecificationTests
     {
