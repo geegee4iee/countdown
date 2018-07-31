@@ -46,6 +46,11 @@ namespace CountdownWPF.Services
         {
             Debug.WriteLine($"{nameof(MonitorUserActiveProcess)} is running on thread id={Thread.CurrentThread.ManagedThreadId}");
 
+            if (DateTime.Now.Date != _bufferedTodayAppRecord.Date)
+            {
+                _bufferedTodayAppRecord = new AppUsageRecord(DateTime.Now);
+            }
+
             if (this._isIdle = IsUserIdle()) return;
 
             var activeProcess = ProcessUtils.GetActiveProcess();
