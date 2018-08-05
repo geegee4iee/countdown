@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Resources;
 using System.Windows.Threading;
@@ -39,7 +40,13 @@ namespace CountdownWPF
         private void InitializeServices()
         {
             _trackingService = new TrackingUserApplicationService(ServiceLocator.GetInstance<IAppUsageRecordRepository>(), ServiceLocator.GetInstance<IAppUsageRecordRepository>("LocalRepository"));
-            _trackingService.StartTracking();
+
+            Task.Run(() =>
+            {
+                _trackingService.StartTracking();
+            });
+
+            ChromeTabBlockingService.Instance.StartListening();
         }
 
         protected override void OnInitialized(EventArgs e)
@@ -84,6 +91,8 @@ namespace CountdownWPF
             _caculateTimeTimer.Stop();
             _trackingService.StopTracking();
 
+            ChromeTabBlockingService.Instance.StopListening();
+
             Debug.WriteLine("Closing the app");
         }
 
@@ -124,6 +133,10 @@ namespace CountdownWPF
             this.countDownToYearEndTxt.Text = $"From now to the end of this year, remaining {(int)remainingTimeToYearEnd.TotalDays} days, {(int)remainingTimeToYearEnd.TotalHours} hours";
         }
 
-
+        private void btnOptions_Click(object sender, RoutedEventArgs e)
+        {
+            var window = new OptionsWindow();
+            window.ShowDialog();
+        }
     }
 }

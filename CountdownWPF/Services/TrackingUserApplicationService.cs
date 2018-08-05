@@ -6,6 +6,7 @@ using CountdownWPF.Utils;
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace CountdownWPF.Services
 {
@@ -32,14 +33,29 @@ namespace CountdownWPF.Services
         {
             if (bufferPersistentRecords) BufferPersistentRecords();
 
-            _monitorActiveProcessTimer = new Timer(MonitorUserActiveProcess, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(Settings.MonitorInterval));
-            _persistentRecordTimer = new Timer(PersistentRecords, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(Settings.PersistentRecordInterval));
+            if (Debugger.IsAttached)
+            {
+                Task.Run(async () =>
+                {
+                    while (true)
+                    {
+                        MonitorUserActiveProcess(null);
+
+                        await Task.Delay(1000);
+                    }
+                });
+            } else
+            {
+                
+                _monitorActiveProcessTimer = new Timer(MonitorUserActiveProcess, null, TimeSpan.FromSeconds(0), TimeSpan.FromSeconds(Settings.MonitorInterval));
+                _persistentRecordTimer = new Timer(PersistentRecords, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(Settings.PersistentRecordInterval));
+            }
         }
 
         public void StopTracking()
         {
-            _monitorActiveProcessTimer.Dispose();
-            _persistentRecordTimer.Dispose();
+            _monitorActiveProcessTimer?.Dispose();
+            _persistentRecordTimer?.Dispose();
         }
 
         private void MonitorUserActiveProcess(object state)
@@ -127,6 +143,9 @@ namespace CountdownWPF.Services
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error when persisting data: {ex.Message}");
+
+                LoggingService.LogException(ex);
+
                 _mainRepositoryUnavailable = true;
 
                 this.PersistentRecords(state);

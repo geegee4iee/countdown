@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Blend for Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown", "Countdown\Countdown.csproj", "{9544D525-39EF-4B80-83CE-759353C151E2}"
@@ -10,23 +10,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountdownWPF", "CountdownWP
 		{23DD8123-1C1D-4555-B842-C1A429AF6170} = {23DD8123-1C1D-4555-B842-C1A429AF6170}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Countdown.Core", "Countdown.Core\Countdown.Core.csproj", "{6D885E8C-8CAF-4528-BD45-FE1F047796D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.Core", "Countdown.Core\Countdown.Core.csproj", "{6D885E8C-8CAF-4528-BD45-FE1F047796D0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.MongoDb.Repository", "Countdown.MongoDb.Repository\Countdown.MongoDb.Repository.csproj", "{23DD8123-1C1D-4555-B842-C1A429AF6170}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.EmbeddedRavenDb.Repository", "Countdown.EmbeddedRavenDb.Repository\Countdown.EmbeddedRavenDb.Repository.csproj", "{B252D3EC-926B-4A01-8E8D-7666B0C0E654}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coundown.Spa.ReactJs", "Coundown.Spa.ReactJs\Coundown.Spa.ReactJs.csproj", "{6594C138-757D-4F48-99C1-69C18B98E255}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coundown.Spa.ReactJs", "Coundown.Spa.ReactJs\Coundown.Spa.ReactJs.csproj", "{6594C138-757D-4F48-99C1-69C18B98E255}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{29F5B882-32C2-4041-9C7B-0D134E7FA769}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Coundown.Benchmarks", "Coundown.Benchmarks\Coundown.Benchmarks.csproj", "{C941AEAE-F5DB-48FA-877F-C6CF72CB9E64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coundown.Benchmarks", "Coundown.Benchmarks\Coundown.Benchmarks.csproj", "{C941AEAE-F5DB-48FA-877F-C6CF72CB9E64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.ML", "Countdown.ML\Countdown.ML.csproj", "{E844F62D-5496-4760-AF27-28158CAD4188}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Countdown.MigrateData", "Countdown.MigrateData\Countdown.MigrateData.csproj", "{0AEDBC10-C814-49AB-AF6F-7D3F73932103}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.MigrateData", "Countdown.MigrateData\Countdown.MigrateData.csproj", "{0AEDBC10-C814-49AB-AF6F-7D3F73932103}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Countdown.ML.Core", "Countdown.ML.Core\Countdown.ML.Core.csproj", "{D0FB9684-9787-4015-9703-733420601E08}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.ML.Core", "Countdown.ML.Core\Countdown.ML.Core.csproj", "{D0FB9684-9787-4015-9703-733420601E08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.Tests", "Countdown.Tests\Countdown.Tests.csproj", "{5F640195-BB9B-479C-B925-C2921B7DC5FB}"
 EndProject

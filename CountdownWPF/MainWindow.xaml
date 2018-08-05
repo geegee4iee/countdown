@@ -25,11 +25,6 @@
 
         <Border Background="#546E7A"/>
         <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#37474F"/>
-
-        <TabControl Background="Transparent" BorderThickness="0" BorderBrush="Transparent">
-           <TabItem Header="Countdown">
-            </TabItem> 
-        </TabControl>
         <StackPanel  Grid.Row="0" Margin="40, 0, 0, 0" VerticalAlignment="Center" HorizontalAlignment="Center">
             <TextBlock Foreground="White" FontSize="10" Text="(Offline)" TextAlignment="Center" Visibility="Hidden"/>
             <TextBlock Foreground="White" FontSize="25" Text="Remaining time" TextAlignment="Left"/>
@@ -52,5 +47,6 @@
             </TextBlock>
         </StackPanel>
         <DockPanel HorizontalAlignment="Left" Height="100" LastChildFill="False" Margin="-103,208,0,0" VerticalAlignment="Top" Width="100"/>
+        <Button x:Name="btnOptions" Content="Options" HorizontalAlignment="Left" Margin="10,75,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="btnOptions_Click"/>
     </Grid>
 </Window>
