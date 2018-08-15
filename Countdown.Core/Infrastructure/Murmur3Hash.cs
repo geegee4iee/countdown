@@ -16,7 +16,7 @@ namespace Countdown.Core.Infrastructure
         private const ulong C2 = 0x4cf5ad432745937fL;
 
         private ulong length;
-        private readonly uint seed; // if want to start with a seed, create a constructor
+        private readonly uint seed = 0; // if want to start with a seed, create a constructor
         ulong h1;
         ulong h2;
 

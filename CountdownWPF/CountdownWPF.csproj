@@ -88,7 +88,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Configurations\DebugWrapper.cs" />
+    <Compile Include="Configurations\ArgumentParser.cs" />
     <Compile Include="Configurations\Settings.cs" />
+    <Compile Include="Configurations\TerminalArgument.cs" />
     <Compile Include="OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>

@@ -23,6 +23,8 @@ namespace CountdownWPF.Services
 
         public AppUsageRecord _bufferedTodayAppRecord = null;
 
+        string _currentProcessId = string.Empty;
+
         public TrackingUserApplicationService(IAppUsageRecordRepository repository, IAppUsageRecordRepository backupRepository)
         {
             _repository = repository;
@@ -76,13 +78,28 @@ namespace CountdownWPF.Services
                 var activeApps = _bufferedTodayAppRecord.ActiveApps;
                 if (!string.IsNullOrWhiteSpace(processInfoId) && activeApps.ContainsKey(processInfoId))
                 {
-                    activeApps[processInfoId].TotalAmountOfTime += TimeSpan.FromSeconds(Settings.MonitorInterval);
+                    var processInfo = activeApps[processInfoId];
+                    if (string.IsNullOrEmpty(_currentProcessId)) _currentProcessId = processInfoId;
+
+                    if (_currentProcessId != processInfoId)
+                    {
+                        var oldProcessInfo = activeApps[_currentProcessId];
+                        oldProcessInfo.EndCurrentSession(DateTime.Now.TimeOfDay);
+
+                        processInfo.StartNewSession(DateTime.Now.TimeOfDay);
+                    }
+                    
+                    processInfo.TotalAmountOfTime += TimeSpan.FromSeconds(Settings.MonitorInterval);
                 }
                 else
                 {
                     var processInfo = ProcessInfoFactory.Create(activeProcess, Settings.MonitorInterval);
+                    processInfo.StartNewSession(DateTime.Now.TimeOfDay);
+
                     activeApps.Add(processInfo.Id, processInfo);
                 }
+
+                _currentProcessId = processInfoId;
             }
         }
 

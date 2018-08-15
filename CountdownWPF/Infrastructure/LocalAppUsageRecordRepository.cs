@@ -72,7 +72,7 @@ namespace CountdownWPF.Infrastructure
         {
             string fileName = Path.Combine(savesFolderPath, (string)id + ".bin");
 
-            if (File.Exists(fileName))
+            while (File.Exists(fileName))
             {
                 File.Delete(fileName);
             }

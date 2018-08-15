@@ -32,7 +32,6 @@ namespace Countdown.Core.Factories
                 processInfo.TotalAmountOfTime += TimeSpan.FromSeconds(monitorIntervalInSeconds);
                 processInfo.MainWindowTitle = activeProcess.MainWindowTitle;
                 processInfo.ProcessName = activeProcess.ProcessName;
-
                 return processInfo;
             }
 

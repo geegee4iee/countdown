@@ -1,5 +1,6 @@
 ﻿using Countdown.Core.Infrastructure;
 using Countdown.Core.Models;
+using CountdownWPF.Configurations;
 using CountdownWPF.Infrastructure;
 using CountdownWPF.Services;
 using System;
@@ -49,7 +50,7 @@ namespace CountdownWPF
                 LoggingService.Log(exception.Message + "\r\n" + exception.StackTrace);
             } while ((exception = exception.InnerException) != null);
 
-            MessageBox.Show(msgs.ToString());
+            MessageBox.Show(msgs.ToString(), "Exception", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }

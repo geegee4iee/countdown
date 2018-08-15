@@ -67,8 +67,10 @@ namespace CountdownWPF.Services
                     {
                         var rawEntry = prop.Split('=');
 
-                        if (rawEntry.Length == 2)
+                        if (rawEntry.Length == 2 && !props.ContainsKey(rawEntry[0].ToLower()))
+                        {
                             props.Add(rawEntry[0].ToLower(), rawEntry[1]);
+                        }
                     }
 
                     props.TryGetValue("url", out string url);
@@ -99,7 +101,7 @@ namespace CountdownWPF.Services
 
                 _listener.BeginGetContext(new AsyncCallback(ProcessRequest), null);
             }
-            catch (ObjectDisposedException ex)
+            catch (ObjectDisposedException)
             {
 
             }

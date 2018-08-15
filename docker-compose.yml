@@ -1,8 +1,15 @@
 version: '3.4'
 
 services:
+  karmapredictorservice:
+    image: ${DOCKER_REGISTRY}karmapredictorservice
+    build:
+      context: .
+      dockerfile: WebServices/KarmaPredictorService/Dockerfile
+
   coundown.spa.reactjs:
     image: ${DOCKER_REGISTRY}coundownspareactjs
     build:
       context: .
       dockerfile: Coundown.Spa.ReactJs/Dockerfile
+

@@ -20,17 +20,19 @@ chrome.runtime.onInstalled.addListener(function () {
     //     });
     // });
 
-    chrome.tabs.onActivated.addListener(function (activeInfo) {
-        chrome.tabs.get(activeInfo.tabId, function (tab) {
-            notifyLocalApp(tab);
-        });
-    });
 
-    chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-        if (changeInfo.status === "loading" && tab.url !== "chrome://newtab/") {
-            notifyLocalApp(tab);
-        }
+});
+
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+    chrome.tabs.get(activeInfo.tabId, function (tab) {
+        notifyLocalApp(tab);
     });
+});
+
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    if (changeInfo.status === "loading" && tab.url !== "chrome://newtab/") {
+        notifyLocalApp(tab);
+    }
 });
 
 function notifyLocalApp(tab) {
