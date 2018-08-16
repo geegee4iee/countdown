@@ -1,5 +1,4 @@
-﻿using Coundown.Spa.ReactJs.Core;
-using Coundown.Spa.ReactJs.Services;
+﻿using Coundown.Spa.ReactJs.Services;
 using Countdown.Core.MachineLearning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,13 +16,12 @@ namespace Coundown.Spa.ReactJs.Infrastructure.ServiceRegisters
         {
             services.AddSingleton(serviceProvider =>
             {
-                var client = new MongoClient(config["MongoDbConnectionString"]);
-                var database = client.GetDatabase(config["MongoDbDatabase"]);
+                var client = new MongoClient(config["MongoConnectionString"]);
+                var database = client.GetDatabase(config["MongoDatabase"]);
 
                 return database;
             });
 
-            services.AddSingleton<IAppSettings>(new AppSettings(config));
             services.AddScoped<IAppUsageRecordRepositoryAsync, AppUsageRecordRepositoryAsync>();
             services.AddScoped<IProcessInfoLabeledItemRepositoryAsync, ProcessInfoLabeledItemRepositoryAsync>();
             services.AddSingleton<IPredictKarmaService, PredictKarmaService>();

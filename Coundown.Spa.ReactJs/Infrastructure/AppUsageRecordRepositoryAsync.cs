@@ -1,11 +1,9 @@
-﻿using Coundown.Spa.ReactJs.Core;
+﻿using Coundown.Spa.ReactJs.Settings;
 using Countdown.Core.Infrastructure;
 using Countdown.Core.Models;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Coundown.Spa.ReactJs.Infrastructure
@@ -13,12 +11,12 @@ namespace Coundown.Spa.ReactJs.Infrastructure
     public class AppUsageRecordRepositoryAsync : IAppUsageRecordRepositoryAsync
     {
         private readonly IMongoDatabase _mongoDb;
-        private readonly IAppSettings _appSettings;
+        private readonly AppSettings _appSettings;
 
-        public AppUsageRecordRepositoryAsync(IMongoDatabase mongoDatabase, IAppSettings appSettings)
+        public AppUsageRecordRepositoryAsync(IMongoDatabase mongoDatabase, IOptions<AppSettings> appSettings)
         {
             this._mongoDb = mongoDatabase;
-            this._appSettings = appSettings;
+            this._appSettings = appSettings.Value;
         }
 
         public async Task AddAsync(AppUsageRecord entity)

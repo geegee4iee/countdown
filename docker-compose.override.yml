@@ -17,9 +17,13 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ASPNETCORE_HTTPS_PORT=44376
+      - MongoConnectionString=mongodb://nosql.data
     ports:
       - "58998:80"
       - "44376:443"
     volumes: 
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  nosql.data:
+    ports:
+      - "27016:27017"

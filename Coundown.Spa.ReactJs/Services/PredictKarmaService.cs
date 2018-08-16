@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Coundown.Spa.ReactJs.Core;
+using Coundown.Spa.ReactJs.Settings;
 using Countdown.Core.MachineLearning;
 using Countdown.Core.Models;
 using Countdown.ML.Core;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace Coundown.Spa.ReactJs.Services
@@ -15,9 +14,9 @@ namespace Coundown.Spa.ReactJs.Services
         private readonly Lazy<KarmaPredictor> _predictor = new Lazy<KarmaPredictor>();
         private readonly IMongoCollection<ProcessInfoLabeledItem> _collection;
 
-        public PredictKarmaService(IMongoDatabase database, IAppSettings appSettings)
+        public PredictKarmaService(IMongoDatabase database, IOptions<AppSettings> appSettings)
         {
-            _collection = database.GetCollection<ProcessInfoLabeledItem>(appSettings.LabeledRecordCollectionName);
+            _collection = database.GetCollection<ProcessInfoLabeledItem>(appSettings.Value.LabeledRecordCollectionName);
         }
 
         public Karma Predict(ProcessInfo item)

@@ -1,9 +1,7 @@
-﻿using Coundown.Spa.ReactJs.Core;
+﻿using Coundown.Spa.ReactJs.Settings;
 using Countdown.Core.MachineLearning;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Coundown.Spa.ReactJs.Infrastructure
@@ -12,9 +10,9 @@ namespace Coundown.Spa.ReactJs.Infrastructure
     {
         private readonly IMongoCollection<ProcessInfoLabeledItem> _collection;
 
-        public ProcessInfoLabeledItemRepositoryAsync(IMongoDatabase database, IAppSettings appSettings)
+        public ProcessInfoLabeledItemRepositoryAsync(IMongoDatabase database, IOptions<AppSettings> appSettings)
         {
-            this._collection = database.GetCollection<ProcessInfoLabeledItem>(appSettings.LabeledRecordCollectionName);
+            this._collection = database.GetCollection<ProcessInfoLabeledItem>(appSettings.Value.LabeledRecordCollectionName);
         }
 
         public async Task Add(ProcessInfoLabeledItem item)

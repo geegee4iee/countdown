@@ -1,21 +1,13 @@
-using System;
-using Coundown.Spa.ReactJs.Core;
 using Coundown.Spa.ReactJs.Hubs;
-using Coundown.Spa.ReactJs.Infrastructure;
 using Coundown.Spa.ReactJs.Infrastructure.BsonMapping;
 using Coundown.Spa.ReactJs.Infrastructure.ServiceRegisters;
-using Countdown.Core.Infrastructure;
-using Countdown.Core.MachineLearning;
-using Countdown.Core.Models;
+using Coundown.Spa.ReactJs.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
 
 namespace Coundown.Spa.ReactJs
 {
@@ -48,6 +40,8 @@ namespace Coundown.Spa.ReactJs
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.Configure<AppSettings>(Configuration);
 
             services.AddSignalR();
         }

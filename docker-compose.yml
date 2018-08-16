@@ -6,10 +6,15 @@ services:
     build:
       context: .
       dockerfile: WebServices/KarmaPredictorService/Dockerfile
+    depends_on:
+      - nosql.data
 
   coundown.spa.reactjs:
     image: ${DOCKER_REGISTRY}coundownspareactjs
     build:
       context: .
       dockerfile: Coundown.Spa.ReactJs/Dockerfile
+
+  nosql.data:
+    image: mongo
 

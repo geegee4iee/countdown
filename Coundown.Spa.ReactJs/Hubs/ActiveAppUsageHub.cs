@@ -1,22 +1,19 @@
-﻿using Coundown.Spa.ReactJs.Core;
-using Countdown.Core.Models;
+﻿using Coundown.Spa.ReactJs.Settings;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Coundown.Spa.ReactJs.Hubs
 {
     public class ActiveAppUsageHub : Hub
     {
-        private readonly IAppSettings _appSettings;
+        private readonly AppSettings _appSettings;
         private readonly IMongoDatabase _mongoDatabase;
 
-        public ActiveAppUsageHub(IMongoDatabase _mongoDatabase, IAppSettings _appSettings)
+        public ActiveAppUsageHub(IMongoDatabase _mongoDatabase, IOptions<AppSettings> _appSettings)
         {
-            this._appSettings = _appSettings;
+            this._appSettings = _appSettings.Value;
             this._mongoDatabase = _mongoDatabase;
         }
 
