@@ -18,3 +18,10 @@ services:
   nosql.data:
     image: mongo
 
+
+  identityserver:
+    image: ${DOCKER_REGISTRY}identityserver
+    build:
+      context: .
+      dockerfile: WebServices/IdentityServer/Dockerfile
+

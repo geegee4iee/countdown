@@ -5,12 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CountdownWPF"
         mc:Ignorable="d"
-        Title="OptionsWindow" Height="450" Width="800">
-    <Grid Background="#FFB2B2B2">
-        
-        <Label Content="Block List" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.082,0.158"/>
-        <TextBox x:Name="txtBlockUrlList" HorizontalAlignment="Left" Height="141" Margin="10,36,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="313" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+        Title="OptionsWindow" Height="320" Width="500">
+    <Grid Background="White" Margin="0,0,0,-53">
+        <Label Content="Blocked Urls" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.082,0.158"/>
+        <TextBox x:Name="txtBlockUrlList" HorizontalAlignment="Left" Height="141" Margin="10,36,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="217" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
         <Button x:Name="btnUpdateBlockList" Content="Update" HorizontalAlignment="Left" Margin="10,182,0,0" VerticalAlignment="Top" Width="75" Click="btnUpdateBlockList_Click"/>
-
+        <CheckBox x:Name="runOnStartupCheckBox" Content="Run on startup" HorizontalAlignment="Left" Margin="232,38,0,0" VerticalAlignment="Top" IsChecked="False" Checked="runOnStartupCheckBox_Checked" Unchecked="runOnStartupCheckBox_Unchecked"/>
+        <Button HorizontalAlignment="Left" Margin="441,10,0,0" VerticalAlignment="Top" Width="41" Height="43">
+            <Button.Background>
+                <ImageBrush ImageSource="Assets/sync.ico" Stretch="UniformToFill" TileMode="Tile"/>
+            </Button.Background>
+        </Button>
     </Grid>
 </Window>

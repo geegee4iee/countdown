@@ -23,7 +23,7 @@ namespace CountdownWPF
         protected override void OnStartup(StartupEventArgs e)
         {
             var currentProcess = Process.GetCurrentProcess();
-            if (Process.GetProcessesByName(currentProcess.ProcessName).Length > 1)
+            if (Process.GetProcessesByName(currentProcess.ProcessName).Length > 1 && !Debugger.IsAttached)
             {
                 Application.Current.Shutdown();
                 return;

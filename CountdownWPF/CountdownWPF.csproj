@@ -97,6 +97,7 @@
     </Compile>
     <Compile Include="Services\ChromeTabBlockingService.cs" />
     <Compile Include="Services\LoggingService.cs" />
+    <Compile Include="Services\SyncingService.cs" />
     <Compile Include="Utils\ChromeUtils.cs" />
     <Compile Include="Utils\CpuCounterUtils.cs" />
     <Compile Include="Infrastructure\LocalAppUsageRecordRepository.cs" />
@@ -162,6 +163,11 @@
       <Name>Countdown.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\sync.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\sync.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

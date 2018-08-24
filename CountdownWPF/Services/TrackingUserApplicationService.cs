@@ -62,8 +62,6 @@ namespace CountdownWPF.Services
 
         private void MonitorUserActiveProcess(object state)
         {
-            Debug.WriteLine($"{nameof(MonitorUserActiveProcess)} is running on thread id={Thread.CurrentThread.ManagedThreadId}");
-
             if (DateTime.Now.Date != _bufferedTodayAppRecord.Date)
             {
                 _bufferedTodayAppRecord = new AppUsageRecord(DateTime.Now);
@@ -76,27 +74,27 @@ namespace CountdownWPF.Services
             {
                 var processInfoId = ProcessInfoFactory.CreateId(activeProcess);
                 var activeApps = _bufferedTodayAppRecord.ActiveApps;
+
+                ProcessInfo processInfo = null;
                 if (!string.IsNullOrWhiteSpace(processInfoId) && activeApps.ContainsKey(processInfoId))
                 {
-                    var processInfo = activeApps[processInfoId];
-                    if (string.IsNullOrEmpty(_currentProcessId)) _currentProcessId = processInfoId;
-
-                    if (_currentProcessId != processInfoId)
-                    {
-                        var oldProcessInfo = activeApps[_currentProcessId];
-                        oldProcessInfo.EndCurrentSession(DateTime.Now.TimeOfDay);
-
-                        processInfo.StartNewSession(DateTime.Now.TimeOfDay);
-                    }
-                    
+                    processInfo = activeApps[processInfoId];
                     processInfo.TotalAmountOfTime += TimeSpan.FromSeconds(Settings.MonitorInterval);
                 }
                 else
                 {
-                    var processInfo = ProcessInfoFactory.Create(activeProcess, Settings.MonitorInterval);
-                    processInfo.StartNewSession(DateTime.Now.TimeOfDay);
-
+                    processInfo = ProcessInfoFactory.Create(activeProcess, Settings.MonitorInterval);
                     activeApps.Add(processInfo.Id, processInfo);
+                }
+
+                if (_currentProcessId != processInfoId)
+                {
+                    if (!string.IsNullOrEmpty(_currentProcessId)) {
+                        var oldProcessInfo = activeApps[_currentProcessId];
+                        oldProcessInfo.EndCurrentSession(DateTime.Now.TimeOfDay);
+                    }
+                    
+                    processInfo.StartNewSession(DateTime.Now.TimeOfDay);
                 }
 
                 _currentProcessId = processInfoId;

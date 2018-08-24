@@ -111,8 +111,6 @@ namespace CountdownWPF
 
         public void UpdateCountDownTimer(object o, object e)
         {
-            Debug.WriteLine($"{nameof(UpdateCountDownTimer)} is running on thread id={Thread.CurrentThread.ManagedThreadId}");
-
             if (_trackingService.IsUserIdle())
             {
                 this.Title = _idleWindowTitle;
