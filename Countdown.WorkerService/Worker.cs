@@ -1,3 +1,4 @@
+using Countdown.WorkerService.Utilities;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,7 +22,8 @@ namespace Countdown.WorkerService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                var activeProcess = ProcessUtils.GetActiveProcess();
+                _logger.LogInformation($"Worker running at: {DateTimeOffset.Now}, active process: {activeProcess.ProcessName}");
                 await Task.Delay(1000, stoppingToken);
             }
         }
