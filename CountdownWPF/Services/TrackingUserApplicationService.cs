@@ -28,6 +28,10 @@ namespace CountdownWPF.Services
         public TrackingUserApplicationService(IAppUsageRecordRepository repository, IAppUsageRecordRepository backupRepository)
         {
             _repository = repository;
+            if (_repository == null)
+            {
+                _repository = backupRepository;
+            }
             _backupRepository = backupRepository;
         }
 

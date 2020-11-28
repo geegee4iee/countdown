@@ -4,6 +4,7 @@ using System.Text;
 
 namespace Countdown.Core.Models
 {
+    [Serializable]
     public class Session
     {
         public Session(TimeSpan start, TimeSpan end)

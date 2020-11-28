@@ -24,7 +24,7 @@ namespace CountdownWPF
         string _originalWindowTitle = null;
         string _idleWindowTitle = null;
 
-        System.Windows.Forms.NotifyIcon notifyIcon = null;
+        //System.Windows.Forms.NotifyIcon notifyIcon = null;
 
         public MainWindow()
         {
@@ -32,7 +32,7 @@ namespace CountdownWPF
 
             InitializeServices();
 
-            CreateNotifyIcon();
+            //CreateNotifyIcon();
 
             RegisterUIUpdateDispatchers();
         }
@@ -63,16 +63,16 @@ namespace CountdownWPF
             _caculateTimeTimer.Start();
         }
 
-        private void CreateNotifyIcon()
-        {
-            notifyIcon = new System.Windows.Forms.NotifyIcon();
-            notifyIcon.DoubleClick += OnNotifyIconDoublyClicked;
-            Uri uri = new Uri("/Assets/clock-icon.ico", UriKind.Relative);
-            StreamResourceInfo info = Application.GetResourceStream(uri);
-            notifyIcon.Icon = new System.Drawing.Icon(info.Stream);
-            notifyIcon.Visible = false;
-            notifyIcon.Text = "Minimized Countdown App";
-        }
+        //private void CreateNotifyIcon()
+        //{
+        //    notifyIcon = new System.Windows.Forms.NotifyIcon();
+        //    notifyIcon.DoubleClick += OnNotifyIconDoublyClicked;
+        //    Uri uri = new Uri("/Assets/clock-icon.ico", UriKind.Relative);
+        //    StreamResourceInfo info = Application.GetResourceStream(uri);
+        //    notifyIcon.Icon = new System.Drawing.Icon(info.Stream);
+        //    notifyIcon.Visible = false;
+        //    notifyIcon.Text = "Minimized Countdown App";
+        //}
 
         private void OnNotifyIconDoublyClicked(object sender, EventArgs e)
         {
@@ -81,7 +81,7 @@ namespace CountdownWPF
                 this.Show();
 
                 this.WindowState = WindowState.Normal;
-                this.notifyIcon.Visible = false;
+                //this.notifyIcon.Visible = false;
                 _caculateTimeTimer.Start();
             }
         }
@@ -100,7 +100,7 @@ namespace CountdownWPF
         {
             if (this.WindowState == WindowState.Minimized)
             {
-                notifyIcon.Visible = true;
+                //notifyIcon.Visible = true;
                 this.Hide();
 
                 _caculateTimeTimer.Stop();
